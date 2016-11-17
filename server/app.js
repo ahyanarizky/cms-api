@@ -11,6 +11,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy
 const user = require('./routes/user.api');
 const data = require('./routes/data.api')
+const datadate = require('./routes/datadate.api')
+
 const session = require('express-session');
 
 
@@ -54,6 +56,8 @@ passport.use(new LocalStrategy(ModelUser.authenticate()))
 
 app.use('/api/user', user);
 app.use('/api/data', data);
+app.use('/api/datadate', datadate);
+
 
 // BIND PASSPORT WITH USER MODEL (PASSPORT-LOCAL-MONGOOSE)
 passport.serializeUser(ModelUser.serializeUser())

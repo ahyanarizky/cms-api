@@ -132,10 +132,14 @@ function homePanel() {
   <li id="nav-data" class="navigation"><a href="#">Data</a></li>
   <li id="nav-datadate" class="navigation"><a href="#">Data Date</a></li>
   `
+
+    let rightside = `
+<li><a id="nav-logout" role="button" class="btn btn-danger navigation">Logout</a></li>
+  `
     $('#navbar-ul-left').append(homepanel)
+    $('#navbar-ul-right').append(rightside)
     $('#nav-data').on('click', loadData)
     $('#nav-datadate').on('click', loadDataDate)
-    $('#nav-logout').show()
     $('#nav-logout').on('click', processLogout)
 }
 
@@ -219,9 +223,7 @@ function processLogout() {
 }
 
 function authPage() {
-    $('#nav-logout').hide()
-    $('#nav-data').hide()
-    $('#nav-datadate').hide()
+    $('.navigation').remove()
     formRegister()
 }
 
@@ -238,6 +240,18 @@ function loadData() {
             <div id="form-create"></div>
             <div id="form-update"></div>
           <div class="container">
+          <h1>Search</h1>
+          <form class="form-inline">
+              <div class="form-group">
+                <label for="form-letter">Letter</label>
+                <input type="text" class="form-control" id="search-letter" placeholder="Letter">
+              </div>
+              <div class="form-group">
+                <label for="form-frequency">Frequency</label>
+                <input type="text" class="form-control" id="search-frequency" placeholder="Frequency">
+              </div>
+          </form>
+
             <table class="table">
                 <thead class="thead-inverse">
                     <tr>
@@ -266,13 +280,16 @@ function loadData() {
       `
             $('#main-container').append(tableData)
             homePanel()
+            $('#search-letter').on('keyup', function() {})
+            $('#search-frequency').on('keyup', function() {})
         }
     })
 }
 
 function formCreate() {
+    $('#form-data').remove()
     let form = `
-<form class="form-inline">
+<form id='form-data' class="form-inline">
     <div class="form-group">
       <label for="form-letter">Letter</label>
       <input type="text" class="form-control" id="form-letter" placeholder="Letter">
@@ -369,5 +386,144 @@ function deleteData(parameter) {
 
 
 function loadDataDate() {
+    $('#main-container').empty()
+
+    $.ajax({
+        url: `http://localhost:3000/api/datadate`,
+        method: "get",
+        success: function(data) {
+            console.log(data);
+            tableData = `
+          <div class="container">
+          <button type="button" class="btn btn-primary" onclick='formCreateDatadate()'><span class="glyphicon glyphicon-plus"></span>  add</button>
+          <div id="form-create-datadate"></div>
+          <div id="form-update-datadate"></div>
+        <div class="container">
+        <h1>Search</h1>
+        <form class="form-inline">
+            <div class="form-group">
+              <label for="form-letter">Letter</label>
+              <input type="text" class="form-control" id="search-letter-datadate" placeholder="yyyy-mm-dd">
+            </div>
+            <div class="form-group">
+              <label for="form-frequency">Frequency</label>
+              <input type="text" class="form-control" id="search-frequency-datadate" placeholder="0.000000">
+            </div>
+        </form>
+
+          <table class="table">
+              <thead class="thead-inverse">
+                  <tr>
+                      <th>#</th>
+                      <th>Letter</th>
+                      <th>Frequency</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody>`
+
+            for (var i = 0; i < data.length; i++) {
+                tableData += `
+                    <tr>
+                        <th scope="row">${i+1}</th>
+                        <td>${data[i].letter}</td>
+                        <td>${data[i].frequency}</td>
+                        <td> <button type="button" class="btn btn-success" onclick=formUpdateDataDate('${data[i].datadateId}')> <span class="glyphicon glyphicon-edit"></span>  Update</button>     <span><button type="button" class="btn btn-danger" onclick=deleteDataDate('${data[i].datadateId}')> <span class="glyphicon glyphicon-trash"></span>  Delete</button></span>                   </td>
+                    </tr> `
+            }
+            tableData += `
+              </tbody>
+          </table>
+        </div>
+      </div>
+    `
+            $('#main-container').append(tableData)
+            homePanel()
+            $('#search-letter').on('keyup', function() {})
+            $('#search-frequency').on('keyup', function() {})
+        }
+    })
+
+}
+
+function formCreateDatadate() {
+    $('#form-datadate').remove()
+    let form = `
+<form id='form-datadate' class="form-inline">
+  <div class="form-group">
+    <label for="form-letter">Letter</label>
+    <input type="text" class="form-control" id="form-letter-datadate" placeholder="yyyy-mm-dd">
+  </div>
+  <div class="form-group">
+    <label for="form-frequency">Frequency</label>
+    <input type="text" class="form-control" id="form-frequency-datadate" placeholder="0.00000">
+  </div>
+  <button class="btn btn-primary" onclick="inputDataDate()">Submit</button>
+</form>
+`
+    $('#form-create-datadate').append(form)
+
+}
+
+function inputDataDate() {
+    let $letter = $('#form-letter-datadate').val()
+    let $frequency = $('#form-frequency-datadate').val()
+    $.ajax({
+        url: `http://localhost:3000/api/datadate`,
+        method: "post",
+        data: {
+            letter: $letter,
+            frequency: $frequency
+        },
+        success: function(data) {
+            $('#main-container').empty()
+            loadDataDate()
+        }
+    })
+}
+
+function formUpdateDataDate(parameter) {
+    $('#form-create-datadate').empty()
+    $('#form-update-datadate').empty()
+    $.ajax({
+        url: `http://localhost:3000/api/datadate/${parameter}`,
+        method: "get",
+        success: function(data) {
+            console.log(data);
+            let formupdate = ''
+            formupdate += `
+  <form class="form-inline">
+      <div class="form-group">
+        <label for="form-letter">Letter</label>
+        <input type="text" class="form-control" id="form-letter-update-datadate" value='${data[0].letter}'>
+      </div>
+      <div class="form-group">
+        <label for="form-frequency">Frequency</label>
+        <input type="text" class="form-control" id="form-frequency-update-datadate" value='${data[0].frequency}' >
+      </div>
+      <button class="btn btn-primary" onclick="updateDataDate(${data[0].datadateId})">Update</button>
+  </form>
+  `
+
+            $('#form-update-datadate').append(formupdate)
+        }
+    })
+}
+
+function updateDataDate(parameter) {
+    let $letter = $('#form-letter-update-datadate').val()
+    let $frequency = $('#form-frequency-update-datadate').val()
+    $.ajax({
+        url: `http://localhost:3000/api/data/${parameter}`,
+        method: "put",
+        data: {
+            letter: $letter,
+            frequency: $frequency
+        },
+        success: function(data) {
+            $('#main-container').empty()
+            loadDataDate()
+        }
+    })
 
 }
