@@ -1,5 +1,9 @@
 $(document).ready(function() {
-    authPage()
+    if (!localStorage.getItem('token')) {
+        authPage()
+    } else {
+        loadData()
+    }
 })
 
 // ---------------------------------------------------------------------------
@@ -234,16 +238,123 @@ function loadData() {
         success: function(data) {
             tableData = `
             <div class="container">
-            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>  add</button>
-            `
+            <button type="button" class="btn btn-primary" onclick='formCreate()'><span class="glyphicon glyphicon-plus"></span>  add</button>
+            <div id="form-create"></div>
+            <div id="form-update"></div>
+          <div class="container">
+            <table class="table">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>#</th>
+                        <th>Letter</th>
+                        <th>Frequency</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>`
+
+            for (var i = 0; i < data.length; i++) {
+                tableData += `
+                      <tr>
+                          <th scope="row">${i+1}</th>
+                          <td>${data[i].letter}</td>
+                          <td>${data[i].frequency}</td>
+                          <td> <button type="button" class="btn btn-success" onclick='formUpdateData(${data[i].dataId})'> <span class="glyphicon glyphicon-edit"></span>  Update</button>     <span><button type="button" class="btn btn-danger" onclick='deleteData(${data[i].dataId})'> <span class="glyphicon glyphicon-trash"></span>  Delete</button></span>                   </td>
+                      </tr> `
+            }
             tableData += `
-
-
+                </tbody>
+            </table>
+          </div>
+        </div>
       `
+            $('#main-container').append(tableData)
+            $('#nav-data').on('click', loadData)
+            $('#nav-datadate').on('click', loadDataDate)
+            $('#nav-logout').on('click', processLogout)
 
         }
     })
 }
+
+function formCreate() {
+    let form = `
+<form class="form-inline">
+    <div class="form-group">
+      <label for="form-letter">Letter</label>
+      <input type="text" class="form-control" id="form-letter" placeholder="Letter">
+    </div>
+    <div class="form-group">
+      <label for="form-frequency">Frequency</label>
+      <input type="text" class="form-control" id="form-frequency" placeholder="Frequency">
+    </div>
+    <button class="btn btn-primary" onclick="inputData()">Submit</button>
+</form>
+  `
+    $('#form-create').append(form)
+}
+
+function inputData() {
+    let $letter = $('#form-letter').val()
+    let $frequency = $('#form-frequency').val()
+    $.ajax({
+        url: `http://localhost:3000/api/data`,
+        method: "post",
+        data: {
+            letter: $letter,
+            frequency: $frequency
+        },
+        success: function(data) {
+            $('#main-container').empty()
+            loadData()
+        }
+    })
+
+}
+
+function formUpdateData(parameter) {
+    $('#form-create').empty()
+
+    $.ajax({
+        url: `http://localhost:3000/api/data/${parameter}`,
+        method: "get",
+        success: function(data) {
+            let formupdate = ''
+            formupdate += `
+    <form class="form-inline">
+        <div class="form-group">
+          <label for="form-letter">Letter</label>
+          <input type="text" class="form-control" id="form-letter-update" value='${data[0].letter}'>
+        </div>
+        <div class="form-group">
+          <label for="form-frequency">Frequency</label>
+          <input type="text" class="form-control" id="form-frequency-update" value='${data[0].frequency}' >
+        </div>
+        <button class="btn btn-primary" onclick="updateData(${data[0].dataId})">Update</button>
+    </form>
+    `
+        }
+    })
+
+}
+
+function updateData(parameter) {
+    let $letter = $('#form-letter-update').val()
+    let $frequency = $('#form-frequency-update').val()
+    $.ajax({
+        url: `http://localhost:3000/api/data/${parameter}`,
+        method: "put",
+        data: {
+            letter: $letter,
+            frequency: $frequency
+        },
+        success: function(data) {
+            $('#main-container').empty()
+            loadData()
+        }
+    })
+}
+
 
 function loadDataDate() {
 

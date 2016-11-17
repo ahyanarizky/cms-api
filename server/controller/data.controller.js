@@ -12,6 +12,17 @@ module.exports = {
             }
         })
     },
+    getOneData: function(req, res) {
+        Data.find({
+            dataId: req.params.id
+        }, function(err, data) {
+            if (err) {
+                res.json({ message: `Error : ${err}` })
+            } else {
+                res.json(data)
+            }
+        })
+    },
     createData: function(req, res) {
         Data.create({
             letter: req.body.letter,
