@@ -114,28 +114,29 @@ function registerProcessClient() {
 
               `
                 $('#main-container').append(html)
-                $('#nav-logout').show()
-                $('#nav-logout').on('click', processLogout)
+                homePanel()
 
-                let homepanel = `
-                <li id='nav-home'><a href="#">Home</a></li>
-                <li id="nav-data"><a href="#">Data</a></li>
-                <li id="nav-datadate"><a href="#">Data Date</a></li>
-                `
-                $('#navbar-ul-left').append(homepanel)
-                $('#nav-data').on('click', loadData)
-                $('#nav-datadate').on('click', loadDataDate)
             },
             error: function(err) {
                 console.log('failed');
-                formRegister()
-                $('#nav-home').hide()
-                $('#nav-data').hide()
-                $('#nav-search').hide()
-                $('#nav-logout').hide()
+                authPage()
             }
         })
     }
+}
+
+function homePanel() {
+    $('.navigation').remove()
+    let homepanel = `
+  <li id='nav-home' class="navigation"><a href="#">Home</a></li>
+  <li id="nav-data" class="navigation"><a href="#">Data</a></li>
+  <li id="nav-datadate" class="navigation"><a href="#">Data Date</a></li>
+  `
+    $('#navbar-ul-left').append(homepanel)
+    $('#nav-data').on('click', loadData)
+    $('#nav-datadate').on('click', loadDataDate)
+    $('#nav-logout').show()
+    $('#nav-logout').on('click', processLogout)
 }
 
 function formLogin() {
@@ -196,14 +197,7 @@ function loginProcessClient() {
             $('#main-container').append(html)
             $('#nav-login').hide()
             $('#nav-register').hide()
-            $('#nav-logout').show()
-            $('#nav-logout').on('click', processLogout)
-            let homepanel = `
-            <li id='nav-home'><a href="#">Home</a></li>
-            <li id="nav-data"><a href="#">Data</a></li>
-            <li id="nav-register"><a href="#">Data Date</a></li>
-            `
-            $('#navbar-ul-left').append(homepanel)
+            homePanel()
 
         },
         error: function(err) {
@@ -226,6 +220,8 @@ function processLogout() {
 
 function authPage() {
     $('#nav-logout').hide()
+    $('#nav-data').hide()
+    $('#nav-datadate').hide()
     formRegister()
 }
 
@@ -259,7 +255,7 @@ function loadData() {
                           <th scope="row">${i+1}</th>
                           <td>${data[i].letter}</td>
                           <td>${data[i].frequency}</td>
-                          <td> <button type="button" class="btn btn-success" onclick='formUpdateData(${data[i].dataId})'> <span class="glyphicon glyphicon-edit"></span>  Update</button>     <span><button type="button" class="btn btn-danger" onclick='deleteData(${data[i].dataId})'> <span class="glyphicon glyphicon-trash"></span>  Delete</button></span>                   </td>
+                          <td> <button type="button" class="btn btn-success" onclick=formUpdateData('${data[i].dataId}')> <span class="glyphicon glyphicon-edit"></span>  Update</button>     <span><button type="button" class="btn btn-danger" onclick=deleteData('${data[i].dataId}')> <span class="glyphicon glyphicon-trash"></span>  Delete</button></span>                   </td>
                       </tr> `
             }
             tableData += `
@@ -269,10 +265,7 @@ function loadData() {
         </div>
       `
             $('#main-container').append(tableData)
-            $('#nav-data').on('click', loadData)
-            $('#nav-datadate').on('click', loadDataDate)
-            $('#nav-logout').on('click', processLogout)
-
+            homePanel()
         }
     })
 }
@@ -314,7 +307,7 @@ function inputData() {
 
 function formUpdateData(parameter) {
     $('#form-create').empty()
-
+    $('#form-update').empty()
     $.ajax({
         url: `http://localhost:3000/api/data/${parameter}`,
         method: "get",
@@ -333,6 +326,8 @@ function formUpdateData(parameter) {
         <button class="btn btn-primary" onclick="updateData(${data[0].dataId})">Update</button>
     </form>
     `
+
+            $('#form-update').append(formupdate)
         }
     })
 
@@ -353,6 +348,23 @@ function updateData(parameter) {
             loadData()
         }
     })
+}
+
+function deleteData(parameter) {
+    var del = confirm("Are you sure want to delete this letter?")
+    if (del) {
+        $.ajax({
+            url: `http://localhost:3000/api/data/${parameter}`,
+            method: "delete",
+            data: {
+                dataId: parameter
+            },
+            success: function() {
+                alert('Deleted Successfully')
+                loadData()
+            }
+        })
+    }
 }
 
 
