@@ -1,21 +1,24 @@
 {
-  "name": "client",
-  "homepage": "https://github.com/ahyanarizky/cms-api",
-  "authors": [
-    "Ahyana Rizky Pratama <ahyana.rizky@gmail.com>"
-  ],
-  "description": "",
-  "main": "",
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "bootstrap": "^3.3.7",
-    "jquery": "^3.1.1"
-  }
+    "name": "client-lil-twitter",
+    "homepage": "https://github.com/ahyanarizky/cms-api",
+    "authors": [
+        "Ahyana Rizky Pratama <ahyana.rizky@gmail.com>"
+    ],
+    "description": "cms-api",
+    "main": "index.html",
+    "keywords": [
+        "client"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "bootstrap": "^3.3.7",
+        "jwt-decode": "^2.1.0"
+    }
 }

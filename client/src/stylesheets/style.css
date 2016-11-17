@@ -1,0 +1,65 @@
+body {
+  background-color: #79b3ef;
+  color: #903620;
+}
+
+a.navbar-brand {
+  color: #a9ff0b;
+}
+.navbar-inverse .navbar-nav>li>a{
+  color: #a9ff0b;
+}
+
+#button-replace-item {
+  margin-bottom: 30px;
+}
+
+#button-replace-cust {
+  margin-bottom: 30px;
+}
+
+.input-group {
+  margin-top: 8px;
+}
+
+.form-inline button {
+  margin-top: 8px;
+}
+
+.avatar {
+  height: 10%;
+  width: 10%;
+  margin-right: 20px;
+}
+
+.panel-info {
+  border-color: #9f24a2;
+  background: darkcyan;
+}
+
+a#nav-logout.btn.btn-danger {
+  padding: 6px;
+  margin-top: 8px;
+  margin-left: 5px;
+  color: yellow;
+}
+
+h3 {
+  font-family: monospace;
+}
+
+.usertweet {
+  font-size: x-large;
+  color: cyan;
+}
+
+.navbar-inverse {
+  background-color: darkcyan;
+  border-color: aqua;
+}
+
+h1 {
+  font-family: monospace;
+  font-style: oblique;
+  text-align: -webkit-center;
+}
