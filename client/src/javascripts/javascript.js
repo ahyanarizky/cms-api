@@ -115,16 +115,18 @@ function registerProcessClient() {
 
                 let homepanel = `
                 <li id='nav-home'><a href="#">Home</a></li>
-                <li id="nav-create"><a href="#">Data</a></li>
-                <li id="nav-register"><a href="#">Data Date</a></li>
+                <li id="nav-data"><a href="#">Data</a></li>
+                <li id="nav-datadate"><a href="#">Data Date</a></li>
                 `
                 $('#navbar-ul-left').append(homepanel)
+                $('#nav-data').on('click', loadData)
+                $('#nav-datadate').on('click', loadDataDate)
             },
             error: function(err) {
                 console.log('failed');
                 formRegister()
                 $('#nav-home').hide()
-                $('#nav-create').hide()
+                $('#nav-data').hide()
                 $('#nav-search').hide()
                 $('#nav-logout').hide()
             }
@@ -194,7 +196,7 @@ function loginProcessClient() {
             $('#nav-logout').on('click', processLogout)
             let homepanel = `
             <li id='nav-home'><a href="#">Home</a></li>
-            <li id="nav-create"><a href="#">Data</a></li>
+            <li id="nav-data"><a href="#">Data</a></li>
             <li id="nav-register"><a href="#">Data Date</a></li>
             `
             $('#navbar-ul-left').append(homepanel)
@@ -205,7 +207,7 @@ function loginProcessClient() {
             $('#nav-register').on('click', formRegister)
             $('#nav-login').on('click', formLogin)
             $('#nav-home').hide()
-            $('#nav-create').hide()
+            $('#nav-data').hide()
             $('#nav-search').hide()
             $('#nav-logout').hide()
         }
@@ -224,5 +226,21 @@ function authPage() {
 }
 
 function loadData() {
+    $('#main-container').empty()
+
+    $.ajax({
+        url: `http://localhost:3000/api/data`,
+        method: "get",
+        success: function(data) {
+            tableData = ''
+            tableData = `
+
+
+      `
+        }
+    })
+}
+
+function loadDataDate() {
 
 }
