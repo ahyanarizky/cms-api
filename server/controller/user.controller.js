@@ -7,6 +7,7 @@ module.exports = {
     registerProcess: function(req, res) {
         User.register({
             email: req.body.email,
+            username: req.body.username
         }, req.body.password, function(err, data) {
             if (err) {
                 res.json({ message: `Error : ${err}` })
@@ -18,6 +19,7 @@ module.exports = {
                         } else {
                             var token = jwt.sign({
                                     email: data.email,
+                                    username: data.username
                                 }, 'secret', { expiresIn: 1440 }) //1 day
                             res.json({
                                 success: true,
@@ -33,7 +35,8 @@ module.exports = {
     loginProcess: function(req, res, next) {
         passport.authenticate('local', {}, (err, user, info) => {
             var token = jwt.sign({
-                    email: user.email
+                    email: user.email,
+                    username: user.username
                 }, 'secret', { expiresIn: 1440 }) //1 day
             res.json({
                 success: true,
