@@ -232,11 +232,15 @@ function loadData() {
         url: `http://localhost:3000/api/data`,
         method: "get",
         success: function(data) {
-            tableData = ''
             tableData = `
+            <div class="container">
+            <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>  add</button>
+            `
+            tableData += `
 
 
       `
+
         }
     })
 }
