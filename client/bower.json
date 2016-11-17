@@ -1,0 +1,21 @@
+{
+  "name": "client",
+  "homepage": "https://github.com/ahyanarizky/cms-api",
+  "authors": [
+    "Ahyana Rizky Pratama <ahyana.rizky@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1"
+  }
+}
